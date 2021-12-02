@@ -2,12 +2,19 @@ import express from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
 const PORT = 3003;
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -54,8 +61,9 @@ const users = [
 app.post("/login", (req, res) => {
   const username = req.body.username;
   // const password = req.body.password;
-  const user = users.find((user) => user.username === username);
+  let user = users.find((user) => user.username === username);
   if (user) {
+    // user = users.find(user => user.username === 'anonymousUser')
     req.session.user = user;
     req.session.save();
     res.json(user);
@@ -66,9 +74,9 @@ app.post("/login", (req, res) => {
 
 app.get("/currentuser", (req, res) => {
   if (req.session.user) {
-    res.user(req.session.user);
+    res.json(req.session.user);
   } else {
-    res.send("bad accsess");
+    res.status(500).send("bad access");
   }
 });
 
