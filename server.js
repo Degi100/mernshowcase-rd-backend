@@ -25,38 +25,38 @@ app.use(
 	})
 );
 
-const users = [
-	{
-		username: "anonymousUser",
-		firstName: "Anonymous",
-		lastName: "User",
-		accessGroups: "loggedOutUsers"
-	},
-	{
-		username: "jj",
-		firstName: "James",
-		lastName: "JustSignedUpton",
-		accessGroups: "loggedInUsers,notApprovedUsers"
-	},
-	{
-		username: "aa",
-		firstName: "Ashley",
-		lastName: "Approvedmemberton",
-		accessGroups: "loggedInUsers, members"
-	},
-	{
-		username: "kc",
-		firstName: "Kyle",
-		lastName: "ContentEditorton",
-		accessGroups: "loggedInUsers, members, contentEditors"
-	},
-	{
-		username: "ma",
-		firstName: "Mindy",
-		lastName: "Administraton",
-		accessGroups: "loggedInUsers, members, admins"
-	}
-];
+// const users = [
+// 	{
+// 		username: "anonymousUser",
+// 		firstName: "Anonymous",
+// 		lastName: "User",
+// 		accessGroups: "loggedOutUsers"
+// 	},
+// 	{
+// 		username: "jj",
+// 		firstName: "James",
+// 		lastName: "JustSignedUpton",
+// 		accessGroups: "loggedInUsers,notApprovedUsers"
+// 	},
+// 	{
+// 		username: "aa",
+// 		firstName: "Ashley",
+// 		lastName: "Approvedmemberton",
+// 		accessGroups: "loggedInUsers, members"
+// 	},
+// 	{
+// 		username: "kc",
+// 		firstName: "Kyle",
+// 		lastName: "ContentEditorton",
+// 		accessGroups: "loggedInUsers, members, contentEditors"
+// 	},
+// 	{
+// 		username: "ma",
+// 		firstName: "Mindy",
+// 		lastName: "Administraton",
+// 		accessGroups: "loggedInUsers, members, admins"
+// 	}
+// ];
 
 app.post("/login", (req, res) => {
 	const username = req.body.username;
