@@ -1,4 +1,4 @@
-@url = http://localhost:3033
+@url = http://localhost:3003/user
 
 ### CREATE user
 POST {{url}}/create
@@ -35,6 +35,6 @@ POST {{url}}/login
 content-type: application/json
 
 {
-	"userName": "User",
+	"userName": "jj",
 	"password": "password"
 }
