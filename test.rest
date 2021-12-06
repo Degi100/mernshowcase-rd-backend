@@ -1,0 +1,40 @@
+@url = http://localhost:3033
+
+### CREATE user
+POST {{url}}/create
+content-type: application/json
+ 
+{
+    "userName": "User300",
+    "password1": "12345678",
+    "password2": "12345678",
+    "email": "username1@mail.com"
+}
+
+### READ users 
+GET {{url}}
+content-type: application/json
+
+### UPDATE user
+PATCH {{url}}/update/61a78c18f3b06d1572e5d462
+content-type: application/json
+ 
+{
+    "userName": "ggg333333g",
+    "password1": "12345678",
+    "password2": "12345678",
+    "email": "username1@mail.com"
+}
+
+### DELETE user
+DELETE {{url}}/delete/61a7823678165961ad65c16e
+content-type: application/json
+
+### LOGIN USERS
+POST {{url}}/login
+content-type: application/json
+
+{
+	"userName": "User",
+	"password": "password"
+}
