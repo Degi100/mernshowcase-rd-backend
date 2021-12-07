@@ -64,6 +64,7 @@ app.get("/logout", async (req, res) => {
 
 app.post("/createuser", async (req, res) => {
   const user = req.body.user;
+  console.log(user)
   if (
     user.username.trim() === "" ||
     user.password1.trim() === "" ||
