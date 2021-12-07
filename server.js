@@ -31,7 +31,7 @@ app.use(
   })
 );
 
-app.get("/user", async (req, res) => {
+app.get("/users", async (req, res) => {
   const user = await UserModel.find();
   res.json(user);
 });

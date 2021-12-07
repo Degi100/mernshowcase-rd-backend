@@ -8,15 +8,6 @@ const UserSchema = new mongoose.Schema({
 	hash: { 'type': String, "required": true},
 	accessGroups: {'type': String, "required": true},
 }, 
-
-// const UserSchema = new mongoose.Schema({
-// 	firstName: {'type': String},
-// 	lastName: {'type': String},
-// 	username: {'type': String},
-// 	email: {'type': String},
-// 	password: { 'type': String},
-// 	accessGroups: {'type': String},
-// }, 
 {
 	timestamps: true,
 	versionKey: false,

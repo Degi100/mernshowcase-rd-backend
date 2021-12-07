@@ -1,6 +1,6 @@
 @url = http://localhost:3003
 
-### CREATE user
+### CREATE USER
 POST {{url}}/createuser
 content-type: application/json
  
@@ -15,11 +15,11 @@ content-type: application/json
 }
 }
 
-### READ users 
-GET {{url}}/user
+### READ USERS 
+GET {{url}}/users
 content-type: application/json
 
-### UPDATE user
+### UPDATE USER
 PATCH {{url}}/update/61a78c18f3b06d1572e5d462
 content-type: application/json
  
@@ -30,12 +30,20 @@ content-type: application/json
     "email": "username1@mail.com"
 }
 
-### DELETE user
+### DELETE USER
 DELETE {{url}}/delete/61a7823678165961ad65c16e
 content-type: application/json
 
-### LOGIN USERS
-POST {{url}}/login
+### LOGIN USERSuserPOST {{url}}/login
+content-type: application/json
+
+{
+	"userName": "jj",
+	"password": "password"
+}
+
+### LOGOUT USERS
+GET {{url}}/logout
 content-type: application/json
 
 {
