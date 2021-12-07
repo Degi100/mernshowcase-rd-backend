@@ -5,9 +5,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import UserModel from "./models/User.js";
-import { MongoNotConnectedError } from "mongodb";
+import bcrypt from "bcrypt";
 
 dotenv.config();
+const saltRounds = Number(process.env.SALT_ROUNDS);
 
 mongoose.connect(process.env.MONGOURI);
 
@@ -63,18 +64,28 @@ app.get("/logout", async (req, res) => {
 
 app.post("/createuser", async (req, res) => {
   const user = req.body.user;
-  const _user = {
-    firstName: user.firstName,
-    lastName: user.lastName,
-    username: user.username,
-    email: user.email,
-    hash: "nnn",
-    accessGroups: "loggedInUsers, notYetApprovedUsers"
+  if (
+    user.username.trim() === "" ||
+    user.password1.trim() === "" ||
+    user.password1 !== user.password2
+  ) {
+    res.sendStatus(403);
+  } else {
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hash = await bcrypt.hash(user.password1, salt);
+    const _user = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      email: user.email,
+      hash,
+      accessGroups: "loggedInUsers, notYetApprovedUsers",
+    };
+    const dbuser = await UserModel.create(_user);
+    res.json({
+      userAdded: dbuser,
+    });
   }
-  const dbuser = await UserModel.create(_user);
-  res.json({
-    userAdded: dbuser,
-  });
 });
 
 app.listen(PORT, (req, res) => {
