@@ -31,6 +31,11 @@ app.use(
   })
 );
 
+const userIsInGroup = (user, accessGroup) => {
+  const accessGroupArray = user.accessGroups.split("").map((m) => m.trim());
+  return accessGroupArray.includes(accessGroup);
+};
+
 app.get("/users", async (req, res) => {
   const user = await UserModel.find();
   res.json(user);
@@ -56,15 +61,9 @@ app.get("/currentuser", async (req, res) => {
   res.json(user);
 });
 
-app.get("/logout", async (req, res) => {
-  req.session.destroy();
-  const user = await UserModel.findOne({ username: "anonymousUser" });
-  res.json(user);
-});
-
 app.post("/createuser", async (req, res) => {
   const user = req.body.user;
-  console.log(user)
+  console.log(user);
   if (
     user.username.trim() === "" ||
     user.password1.trim() === "" ||
@@ -87,6 +86,38 @@ app.post("/createuser", async (req, res) => {
       userAdded: dbuser,
     });
   }
+});
+
+app.post("/approveuser", async (req, res) => {
+  const id = req.body.id;
+  let user = req.session.user;
+  if (!user) {
+    res.sendStatus(403);
+  } else {
+    if (!userIsInGroup(user, "admins")) {
+      res.sendStatus(403);
+    } else {
+      const updateResult = await UserModel.findOneAndUpdate(
+        { _id: new mongoose.Types.ObjectId(id) },
+        { $set: { accessGroups: "loggedInUsers,members" } },
+        { new: true }
+      );
+      res.json({ result: updateResult })
+    }
+  }
+});
+
+app.get("/notyetapprovedusers", async (req, res) => {
+  const users = await UserModel.find({
+    accessGroups: { $regex: "notYetApprovedUsers", $options: "i" },
+  });
+  res.json({ users });
+});
+
+app.get("/logout", async (req, res) => {
+  req.session.destroy();
+  const user = await UserModel.findOne({ username: "anonymousUser" });
+  res.json(user);
 });
 
 app.listen(PORT, (req, res) => {
