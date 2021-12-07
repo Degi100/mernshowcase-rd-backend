@@ -4,7 +4,8 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
-import User from "./models/User.js";
+import UserModel from "./models/User.js";
+import { MongoNotConnectedError } from "mongodb";
 
 dotenv.config();
 
@@ -30,16 +31,16 @@ app.use(
 );
 
 app.get("/user", async (req, res) => {
-  const user = await User.find();
+  const user = await UserModel.find();
   res.json(user);
 });
 
 app.post("/login", async (req, res) => {
   const username = req.body.username;
   // const password = req.body.password;
-  let user = await User.findOne({ username: username });
+  let user = await UserModel.findOne({ username: username });
   if (!user) {
-    user = await User.findOne({ username: "anonymousUser" });
+    user = await UserModel.findOne({ username: "anonymousUser" });
   }
   req.session.user = user;
   req.session.save();
@@ -49,15 +50,31 @@ app.post("/login", async (req, res) => {
 app.get("/currentuser", async (req, res) => {
   let user = req.session.user;
   if (!user) {
-    user = await User.findOne({ username: "anonymousUser" });
+    user = await UserModel.findOne({ username: "anonymousUser" });
   }
   res.json(user);
 });
 
-app.get("/logout", async(req, res) => {
+app.get("/logout", async (req, res) => {
   req.session.destroy();
-  const user = await User.findOne({ username: "anonymousUser" });
+  const user = await UserModel.findOne({ username: "anonymousUser" });
   res.json(user);
+});
+
+app.post("/createuser", async (req, res) => {
+  const user = req.body.user;
+  const _user = {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    username: user.username,
+    email: user.email,
+    hash: "nnn",
+    accessGroups: "loggedInUsers, notYetApprovedUsers"
+  }
+  const dbuser = await UserModel.create(_user);
+  res.json({
+    userAdded: dbuser,
+  });
 });
 
 app.listen(PORT, (req, res) => {

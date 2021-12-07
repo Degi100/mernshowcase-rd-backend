@@ -5,14 +5,25 @@ const UserSchema = new mongoose.Schema({
 	lastName: {'type': String, "required": true},
 	username: {'type': String, "required": true},
 	email: {'type': String, "required": true},
-	password: { 'type': String, "required": true},
+	hash: { 'type': String, "required": true},
 	accessGroups: {'type': String, "required": true},
 }, 
+
+// const UserSchema = new mongoose.Schema({
+// 	firstName: {'type': String},
+// 	lastName: {'type': String},
+// 	username: {'type': String},
+// 	email: {'type': String},
+// 	password: { 'type': String},
+// 	accessGroups: {'type': String},
+// }, 
 {
 	timestamps: true,
-	versionKey: false
+	versionKey: false,
+	collection: "users"
+
 })
 
-const User = mongoose.model('User', UserSchema);
+const UserModel = mongoose.model('UserModel', UserSchema);
 
-export default User;
+export default UserModel;

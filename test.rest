@@ -1,18 +1,22 @@
-@url = http://localhost:3003/user
+@url = http://localhost:3003
 
 ### CREATE user
-POST {{url}}/create
+POST {{url}}/createuser
 content-type: application/json
  
 {
-    "userName": "User300",
+"user": {
+    "firstName": "UserFirstName",
+    "lastName": "UserLastName",
+    "username": "UserName",
+    "email": "email@emailbla.de",
     "password1": "12345678",
-    "password2": "12345678",
-    "email": "username1@mail.com"
+    "password2": "12345678"
+}
 }
 
 ### READ users 
-GET {{url}}
+GET {{url}}/user
 content-type: application/json
 
 ### UPDATE user
