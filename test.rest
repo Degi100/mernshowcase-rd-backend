@@ -34,7 +34,8 @@ content-type: application/json
 DELETE {{url}}/delete/61a7823678165961ad65c16e
 content-type: application/json
 
-### LOGIN USERSuserPOST {{url}}/login
+### LOGIN USERS
+userPOST {{url}}/login
 content-type: application/json
 
 {

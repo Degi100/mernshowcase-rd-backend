@@ -9,7 +9,6 @@ import bcrypt from "bcrypt";
 
 dotenv.config();
 const saltRounds = Number(process.env.SALT_ROUNDS);
-
 mongoose.connect(process.env.MONGOURI);
 
 const app = express();
