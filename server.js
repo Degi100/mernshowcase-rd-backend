@@ -42,14 +42,21 @@ app.get("/users", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   const username = req.body.username;
-  // const password = req.body.password;
-  let user = await UserModel.findOne({ username: username });
-  if (!user) {
-    user = await UserModel.findOne({ username: "anonymousUser" });
+  const password = req.body.password;
+  let dbuser = await UserModel.findOne({ username: username });
+  if (!dbuser) {
+    dbuser = await UserModel.findOne({ username: "anonymousUser" });
+  } else {
+    bcrypt.compare(password, dbuser.hash).then((passwordIsOk) => {
+      if (passwordIsOk) {
+        req.session.user = dbuser;
+        req.session.save();
+        res.json(dbuser);
+      } else {
+        res.sendStatus(403);
+      }
+    });
   }
-  req.session.user = user;
-  req.session.save();
-  res.json(user);
 });
 
 app.get("/currentuser", async (req, res) => {
@@ -101,7 +108,7 @@ app.post("/approveuser", async (req, res) => {
         { $set: { accessGroups: "loggedInUsers,members" } },
         { new: true }
       );
-      res.json({ result: updateResult })
+      res.json({ result: updateResult });
     }
   }
 });
