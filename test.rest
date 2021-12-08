@@ -24,7 +24,7 @@ PATCH {{url}}/update/61a78c18f3b06d1572e5d462
 content-type: application/json
  
 {
-    "userName": "ggg333333g",
+    "username": "ggg333333g",
     "password1": "12345678",
     "password2": "12345678",
     "email": "username1@mail.com"

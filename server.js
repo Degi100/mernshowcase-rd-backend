@@ -31,7 +31,7 @@ app.use(
 );
 
 const userIsInGroup = (user, accessGroup) => {
-  const accessGroupArray = user.accessGroups.split("").map((m) => m.trim());
+  const accessGroupArray = user.accessGroups.split(",").map((m) => m.trim());
   return accessGroupArray.includes(accessGroup);
 };
 
@@ -61,26 +61,26 @@ app.get("/currentuser", async (req, res) => {
 });
 
 app.post("/createuser", async (req, res) => {
-  const user = req.body.user;
-  console.log(user);
+  const frontendUser = req.body.user;
+  console.log(frontendUser);
   if (
-    user.username.trim() === "" ||
-    user.password1.trim() === "" ||
-    user.password1 !== user.password2
+    frontendUser.username.trim() === "" ||
+    frontendUser.password1.trim() === "" ||
+    frontendUser.password1 !== frontendUser.password2
   ) {
     res.sendStatus(403);
   } else {
     const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(user.password1, salt);
-    const _user = {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      username: user.username,
-      email: user.email,
+    const hash = await bcrypt.hash(frontendUser.password1, salt);
+    const backendUser = {
+      firstName: frontendUser.firstName,
+      lastName: frontendUser.lastName,
+      username: frontendUser.username,
+      email: frontendUser.email,
       hash,
       accessGroups: "loggedInUsers, notYetApprovedUsers",
     };
-    const dbuser = await UserModel.create(_user);
+    const dbuser = await UserModel.create(backendUser);
     res.json({
       userAdded: dbuser,
     });
