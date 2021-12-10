@@ -51,3 +51,7 @@ content-type: application/json
 	"userName": "jj",
 	"password": "password"
 }
+
+### READ CURRENTUSER
+GET {{url}}/currentUser
+content-type: application/json

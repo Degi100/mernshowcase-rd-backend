@@ -36,8 +36,8 @@ const userIsInGroup = (user, accessGroup) => {
 };
 
 app.get("/users", async (req, res) => {
-  const user = await UserModel.find();
-  res.json(user);
+  const users = await UserModel.find();
+  res.json(users);
 });
 
 app.post("/login", async (req, res) => {
