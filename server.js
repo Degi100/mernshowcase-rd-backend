@@ -69,9 +69,10 @@ app.get("/currentuser", async (req, res) => {
 
 app.post("/createuser", async (req, res) => {
   const frontendUser = req.body.user;
-  console.log(frontendUser);
   if (
     frontendUser.username.trim() === "" ||
+    frontendUser.email1.trim() === "" ||
+    frontendUser.email1 !== frontendUser.email2 ||
     frontendUser.password1.trim() === "" ||
     frontendUser.password1 !== frontendUser.password2
   ) {
@@ -79,11 +80,12 @@ app.post("/createuser", async (req, res) => {
   } else {
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(frontendUser.password1, salt);
+    const email = frontendUser.email1
     const backendUser = {
       firstName: frontendUser.firstName,
       lastName: frontendUser.lastName,
       username: frontendUser.username,
-      email: frontendUser.email,
+      email,
       hash,
       accessGroups: "loggedInUsers, notYetApprovedUsers",
     };
