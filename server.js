@@ -120,6 +120,14 @@ app.get("/notyetapprovedusers", async (req, res) => {
   res.json({ users });
 });
 
+app.delete("/deleteuser", async (req, res) => {
+  const id = req.body.id;
+  const user = await UserModel.findByIdAndDelete({
+    _id: new mongoose.Types.ObjectId(id),
+  });
+  res.json({ user });
+});
+
 app.get("/logout", async (req, res) => {
   req.session.destroy();
   const user = await UserModel.findOne({ username: "anonymousUser" });
