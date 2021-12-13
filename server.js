@@ -8,11 +8,14 @@ import UserModel from "./models/User.js";
 import bcrypt from "bcrypt";
 
 dotenv.config();
-const saltRounds = Number(process.env.SALT_ROUNDS);
 mongoose.connect(process.env.MONGOURI);
 
 const app = express();
-const PORT = 3003;
+const PORT = process.env.ALLOWED_FRONTEND_URI || 3003;
+
+app.use(express.json());
+
+const saltRounds = Number(process.env.SALT_ROUNDS);
 
 app.use(
   cors({
