@@ -20,21 +20,25 @@ GET {{url}}/users
 content-type: application/json
 
 ### UPDATE USER
-PATCH {{url}}/update/61a78c18f3b06d1572e5d462
+PATCH {{url}}/user/61b08f62bd7e135c8604143b
 content-type: application/json
  
 {
-    "userName": "ggg333333g",
-    "password1": "12345678",
-    "password2": "12345678",
-    "email": "username1@mail.com"
+   "firstName": "Rene",
+   "lastName": "De",
+   "username": "Admin",
+   "email": "admin@admin.blablub",
+   "accessGroups": "members, admins"
 }
 
 ### DELETE USER
-DELETE {{url}}/delete/61a7823678165961ad65c16e
+DELETE {{url}}/deleteuser
 content-type: application/json
 
-### LOGIN USERSuserPOST {{url}}/login
+{ "id": "61af7efcd9500f9a15aca5d9"}
+
+### LOGIN USERS
+userPOST {{url}}/login
 content-type: application/json
 
 {
@@ -50,3 +54,7 @@ content-type: application/json
 	"userName": "jj",
 	"password": "password"
 }
+
+### READ CURRENTUSER
+GET {{url}}/currentUser
+content-type: application/json

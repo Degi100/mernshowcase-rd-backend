@@ -9,7 +9,6 @@ import bcrypt from "bcrypt";
 
 dotenv.config();
 const saltRounds = Number(process.env.SALT_ROUNDS);
-
 mongoose.connect(process.env.MONGOURI);
 
 const app = express();
@@ -32,25 +31,32 @@ app.use(
 );
 
 const userIsInGroup = (user, accessGroup) => {
-  const accessGroupArray = user.accessGroups.split("").map((m) => m.trim());
+  const accessGroupArray = user.accessGroups.split(",").map((m) => m.trim());
   return accessGroupArray.includes(accessGroup);
 };
 
 app.get("/users", async (req, res) => {
-  const user = await UserModel.find();
-  res.json(user);
+  const users = await UserModel.find();
+  res.json(users);
 });
 
 app.post("/login", async (req, res) => {
   const username = req.body.username;
-  // const password = req.body.password;
-  let user = await UserModel.findOne({ username: username });
-  if (!user) {
-    user = await UserModel.findOne({ username: "anonymousUser" });
+  const password = req.body.password;
+  let dbuser = await UserModel.findOne({ username: username });
+  if (!dbuser) {
+    dbuser = await UserModel.findOne({ username: "anonymousUser" });
+  } else {
+    bcrypt.compare(password, dbuser.hash).then((passwordIsOk) => {
+      if (passwordIsOk) {
+        req.session.user = dbuser;
+        req.session.save();
+        res.json(dbuser);
+      } else {
+        res.sendStatus(403);
+      }
+    });
   }
-  req.session.user = user;
-  req.session.save();
-  res.json(user);
 });
 
 app.get("/currentuser", async (req, res) => {
@@ -62,26 +68,28 @@ app.get("/currentuser", async (req, res) => {
 });
 
 app.post("/createuser", async (req, res) => {
-  const user = req.body.user;
-  console.log(user);
+  const frontendUser = req.body.user;
   if (
-    user.username.trim() === "" ||
-    user.password1.trim() === "" ||
-    user.password1 !== user.password2
+    frontendUser.username.trim() === "" ||
+    frontendUser.email1.trim() === "" ||
+    frontendUser.email1 !== frontendUser.email2 ||
+    frontendUser.password1.trim() === "" ||
+    frontendUser.password1 !== frontendUser.password2
   ) {
     res.sendStatus(403);
   } else {
     const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(user.password1, salt);
-    const _user = {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      username: user.username,
-      email: user.email,
+    const hash = await bcrypt.hash(frontendUser.password1, salt);
+    const email = frontendUser.email1
+    const backendUser = {
+      firstName: frontendUser.firstName,
+      lastName: frontendUser.lastName,
+      username: frontendUser.username,
+      email,
       hash,
       accessGroups: "loggedInUsers, notYetApprovedUsers",
     };
-    const dbuser = await UserModel.create(_user);
+    const dbuser = await UserModel.create(backendUser);
     res.json({
       userAdded: dbuser,
     });
@@ -102,7 +110,7 @@ app.post("/approveuser", async (req, res) => {
         { $set: { accessGroups: "loggedInUsers,members" } },
         { new: true }
       );
-      res.json({ result: updateResult })
+      res.json({ result: updateResult });
     }
   }
 });
@@ -112,6 +120,14 @@ app.get("/notyetapprovedusers", async (req, res) => {
     accessGroups: { $regex: "notYetApprovedUsers", $options: "i" },
   });
   res.json({ users });
+});
+
+app.delete("/deleteuser", async (req, res) => {
+  const id = req.body.id;
+  const user = await UserModel.findByIdAndDelete({
+    _id: new mongoose.Types.ObjectId(id),
+  });
+  res.json({ user });
 });
 
 app.get("/logout", async (req, res) => {
