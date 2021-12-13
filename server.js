@@ -17,19 +17,29 @@ app.use(express.json());
 
 const saltRounds = Number(process.env.SALT_ROUNDS);
 
+app.set("trust proxy", 1);
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin:
+      process.env.NODE_ENV !== "production"
+        ? process.env.FRONTEND_ORIGIN
+        : [process.env.FRONTEND_ORIGIN_HTTP, process.env.FRONTEND_ORIGIN_HTTPS],
     credentials: true,
   })
 );
-app.use(express.json());
+
 app.use(cookieParser());
 app.use(
   session({
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    secret: process.env.SESSION_SECRET || "tempsecret",
+    cookie: {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+    },
   })
 );
 
@@ -83,7 +93,7 @@ app.post("/createuser", async (req, res) => {
   } else {
     const salt = await bcrypt.genSalt(saltRounds);
     const hash = await bcrypt.hash(frontendUser.password1, salt);
-    const email = frontendUser.email1
+    const email = frontendUser.email1;
     const backendUser = {
       firstName: frontendUser.firstName,
       lastName: frontendUser.lastName,
