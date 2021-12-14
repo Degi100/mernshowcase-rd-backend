@@ -58,7 +58,7 @@ app.post("/login", async (req, res) => {
   const password = req.body.password;
   let dbuser = await UserModel.findOne({ username: username });
   if (!dbuser) {
-    dbuser = await UserModel.findOne({ username: "anonymousUser" });
+    dbuser = await UserModel.findOne({ username: "Guest" });
   } else {
     bcrypt.compare(password, dbuser.hash).then((passwordIsOk) => {
       if (passwordIsOk) {
@@ -75,7 +75,7 @@ app.post("/login", async (req, res) => {
 app.get("/currentuser", async (req, res) => {
   let user = req.session.user;
   if (!user) {
-    user = await UserModel.findOne({ username: "anonymousUser" });
+    user = await UserModel.findOne({ username: "Guest" });
   }
   res.json(user);
 });
@@ -145,7 +145,7 @@ app.delete("/deleteuser", async (req, res) => {
 
 app.get("/logout", async (req, res) => {
   req.session.destroy();
-  const user = await UserModel.findOne({ username: "anonymousUser" });
+  const user = await UserModel.findOne({ username: "Guest" });
   res.json(user);
 });
 
