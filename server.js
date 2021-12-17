@@ -36,7 +36,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      maxAge: 60 * 60 * 24,
+      maxAge: 60 * 60 * 1000 * 24,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
     },
