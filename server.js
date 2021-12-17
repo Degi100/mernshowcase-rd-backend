@@ -49,7 +49,7 @@ const userIsInGroup = (user, accessGroup) => {
 };
 
 app.get("/users", async (req, res) => {
-  const users = await UserModel.find();
+  const users = await UserModel.find({}).select("username firstName lastName email accessGroups createdAt").sort({_id: -1});
   res.json(users);
 });
 

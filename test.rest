@@ -6,12 +6,12 @@ content-type: application/json
  
 {
 "user": {
-    "firstName": "UserFirstName3333",
-    "lastName": "UserLastName",
-    "username": "UserName",
-    "email": "email@emailbla.de",
-    "password1": "12345678",
-    "password2": "12345678"
+    "firstName": "guest",
+    "lastName": "guest",
+    "username": "Guest",
+    "email": "guest@guest.deeee",
+    "password1": "123",
+    "password2": "123"
 }
 }
 
@@ -24,11 +24,11 @@ PATCH {{url}}/user/61b08f62bd7e135c8604143b
 content-type: application/json
  
 {
-   "firstName": "Rene",
-   "lastName": "De",
-   "username": "Admin",
-   "email": "admin@admin.blablub",
-   "accessGroups": "members, admins"
+   "firstName": "guest",
+   "lastName": "guest",
+   "username": "Guest",
+   "email": "",
+   "accessGroups": "loggedOutUsers"
 }
 
 ### DELETE USER
